@@ -1,0 +1,36 @@
+# Streamlit for web application
+streamlit
+
+# OpenCV for image and video processing (headless version for servers)
+setuptools
+opencv-python-headless>=4.5.3.56
+ffmpeg
+
+# YOLOv8 for object detection and pose estimation
+ultralytics
+
+# Dynamic Time Warping for similarity calculation between sequences
+dtaidistance
+
+# Pillow for image processing (used in conjunction with OpenCV)
+Pillow
+
+# Numpy for numerical operations
+numpy>=1.24.3
+
+# OpenAI for GPT API
+openai==0.28.0
+
+# PyTorch for machine learning
+torch==2.3.1
+torchaudio
+torchvision
+
+# Scikit-learn for machine learning utilities
+scikit-learn
+
+# dotenv for environment variable management
+python-dotenv
+
+# FFmpeg for video processing
+imageio-ffmpeg

@@ -1,0 +1,16 @@
+libgl1-mesa-glx
+libglib2.0-0
+libsm6
+libxext6
+libxrender-dev
+ffmpeg
+
+qtbase5-dev
+libqt5gui5
+libqt5widgets5
+libqt5opengl5-dev
+qttools5-dev-tools
+qtchooser
+
+libatlas-base-dev
+gfortran

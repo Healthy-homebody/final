@@ -1,0 +1,5 @@
+/.venv
+/.env
+screen/__pycache__/page1.cpython-311.pyc
+screen/__pycache__/page2.cpython-311.pyc
+screen/__pycache__/page3.cpython-311.pyc

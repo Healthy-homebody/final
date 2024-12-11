@@ -63,7 +63,7 @@ def main_page():
         "부드러운 전신 스트레칭": os.path.join(os.path.dirname(__file__), '../src/images/11.jpg'),
         "산후 체형 교정 동작": os.path.join(os.path.dirname(__file__), '../src/images/12.jpg'),
     }
-    
+
     # 이미지 경로 확인
     check_image_paths(image_paths)
 
@@ -88,24 +88,14 @@ def main_page():
             .section {
                 margin-bottom: 20px;
             }
-            .action-button {
-                margin-top: 15px;
-            }
-            .category-column {
-                padding: 20px;
-            }
-            .intro-text {
+            .description-style {
                 font-size: 16px;
                 line-height: 1.6;
                 margin-top: 30px;
             }
-            .image-container {
-                max-width: 350px;
-                margin-bottom: 20px;
-            }
         </style>
     ''', unsafe_allow_html=True)
-    
+
     st.markdown('<div class="title-style">Healthy Homebody</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title-style section">필라테스 동작을 선택하세요</div>', unsafe_allow_html=True)
 
@@ -131,31 +121,33 @@ def main_page():
         ]
     }
 
-    for category, actions in categories.items():
-        st.markdown(f'<div class="category-title">{category}</div>', unsafe_allow_html=True)
-        
-        col1, col2 = st.columns(2)
+    # 드롭다운 메뉴로 카테고리 선택
+    selected_category = st.selectbox("카테고리를 선택하세요:", list(categories.keys()))
 
-        with col1:
-            for action in actions[:2]:
-                image = Image.open(image_paths[action]) if action in image_paths else None
-                if image:
-                    st.image(image, use_column_width=True)
-                
-                if st.button(action, key=f"{category}_{action}"):
-                    st.session_state.selected_page = "page1"
-                    st.session_state.selected_action = action
+    st.markdown(f'<div class="category-title">{selected_category}</div>', unsafe_allow_html=True)
 
-        with col2:
-            for action in actions[2:]:
-                image = Image.open(image_paths[action]) if action in image_paths else None
-                if image:
-                    st.image(image, use_column_width=True)
-                
-                if st.button(action, key=f"{category}_{action}"):
-                    st.session_state.selected_page = "page1"
-                    st.session_state.selected_action = action
-        
+    # 선택된 카테고리의 동작들 렌더링
+    actions = categories[selected_category]
+    col1, col2 = st.columns(2)
+
+    with col1:
+        for action in actions[:2]:
+            image = Image.open(image_paths[action]) if action in image_paths else None
+            if image:
+                st.image(image, use_column_width=True)
+            if st.button(action, key=f"{selected_category}_{action}"):
+                st.session_state.selected_page = "page1"
+                st.session_state.selected_action = action
+
+    with col2:
+        for action in actions[2:]:
+            image = Image.open(image_paths[action]) if action in image_paths else None
+            if image:
+                st.image(image, use_column_width=True)
+            if st.button(action, key=f"{selected_category}_{action}"):
+                st.session_state.selected_page = "page1"
+                st.session_state.selected_action = action
+
     st.markdown(
         """
         <div class="description-style section">
@@ -168,9 +160,10 @@ def main_page():
         올바른 자세를 유지할 수 있도록<span class="highlight">정확한 피드백</span>을 제공합니다. 
         편리한 웹 기반 플랫폼을 통해 사용자는 언제 어디서나 스트레칭을 수행하고 자신의 건강 상태를 관리할 수 있습니다.
         </div>
-        """, 
+        """,
         unsafe_allow_html=True
     )
+
 
 # 페이지 1: 동작 설명 페이지
 def page1():

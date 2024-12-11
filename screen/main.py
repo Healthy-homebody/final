@@ -430,9 +430,105 @@ def page2():
         # 임시 파일 삭제
         os.remove(video_path2)
         
-        
-        
-def recommend_page():
+
+def generate_recommendation(user_data):
+    """
+    사용자 데이터와 목적에 기반한 맞춤형 필라테스 플랜 추천 생성
+    """
+    # 하드코딩된 필라테스 추천 플랜 (API 호출 대신)
+    recommended_plan = {
+        "1주차": {
+            "월요일": [
+                {
+                    "동작": "롤링 업 (Rolling Up)",
+                    "설명": "복부 근육 강화와 척추 유연성 향상에 도움되는 기본 운동",
+                    "난이도": "초급",
+                    "소요시간": "10분",
+                    "주의사항": "허리 통증이 있다면 조심스럽게 진행하세요"
+                },
+                {
+                    "동작": "100s (Hundreds)",
+                    "설명": "코어 근육 강화를 위한 클래식한 필라테스 동작",
+                    "난이도": "중급",
+                    "소요시간": "15분",
+                    "주의사항": "호흡을 안정적으로 유지하세요"
+                }
+            ],
+            "수요일": [
+                {
+                    "동작": "테이블 탑 (Table Top)",
+                    "설명": "균형감과 코어 안정성을 향상시키는 운동",
+                    "난이도": "초급",
+                    "소요시간": "12분",
+                    "주의사항": "손목과 무릎에 무리가 가지 않도록 주의"
+                },
+                {
+                    "동작": "크로스 크런치 (Cross Crunch)",
+                    "설명": "복부 옆면 근육을 강화하는 동작",
+                    "난이도": "초급-중급",
+                    "소요시간": "10분",
+                    "주의사항": "목에 무리가 가지 않도록 주의"
+                }
+            ],
+            "금요일": [
+                {
+                    "동작": "레그 서클 (Leg Circles)",
+                    "설명": "하체 근육과 코어 안정성을 동시에 강화",
+                    "난이도": "중급",
+                    "소요시간": "15분",
+                    "주의사항": "허리를 평평하게 바닥에 밀착시키세요"
+                },
+                {
+                    "동작": "플랭크 변형",
+                    "설명": "전신 근력 강화와 코어 안정성 향상",
+                    "난이도": "중급-고급",
+                    "소요시간": "10분",
+                    "주의사항": "무릎이 흔들리지 않도록 주의"
+                }
+            ]
+        }
+    }
+    return recommended_plan
+
+def display_recommendation(recommendation):
+    """
+    추천 운동 계획을 드롭다운으로 시각적으로 표시
+    """
+    st.subheader("🌟 맞춤형 필라테스 주간 계획")
+    
+    # 추천 내용 드롭다운으로 출력
+    for week, days in recommendation.items():
+        st.markdown(f"### {week}")
+        for day, exercises in days.items():
+            with st.expander(f"**{day} 운동 계획**"):
+                for exercise in exercises:
+                    st.markdown(f"#### {exercise.get('동작', '운동')}")
+                    st.markdown(f"**설명**: {exercise.get('설명', '없음')}")
+                    st.markdown(f"**난이도**: {exercise.get('난이도', '없음')}")
+                    st.markdown(f"**소요시간**: {exercise.get('소요시간', '없음')}")
+                    st.markdown(f"**주의사항**: {exercise.get('주의사항', '없음')}")
+                    st.divider()
+
+def display_profile_insights(profile):
+    """사용자 프로필 인사이트 시각화"""
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric("BMI", calculate_bmi(profile['weight'], profile['height']))
+        st.metric("활동 수준", profile['activity_level'])
+    
+    with col2:
+        st.metric("목표", profile['purpose'])
+        st.metric("성별", profile['gender'])
+
+def calculate_bmi(weight, height):
+    """BMI 계산"""
+    height_m = height / 100
+    bmi = weight / (height_m ** 2)
+    return f"{bmi:.1f}"
+    
+
+def recommend_page(): # 추천 페이지
     st.title("🧘‍♀️ 맞춤형 필라테스 계획 추천")
     st.write("""
     안녕하세요! 🧘‍♂️  
@@ -440,7 +536,7 @@ def recommend_page():
     간단한 정보를 입력하시면, 나만의 필라테스 루틴을 만들어드릴게요!
     """)
 
-    # 사용자 프로필 입력
+    # 사용자 프로필 입력 폼
     with st.form("user_profile"):
         st.subheader("✨ 사용자 프로필 입력")
         age = st.number_input("나이", min_value=10, max_value=100, value=25, help="정확한 추천을 위해 나이를 입력해주세요.")
@@ -483,102 +579,6 @@ def recommend_page():
         # 추천 계획 표시
         display_recommendation(recommended_plan)
 
-    def generate_recommendation(user_data):
-        """
-        사용자 데이터와 목적에 기반한 맞춤형 필라테스 플랜 추천 생성
-        """
-        # 하드코딩된 필라테스 추천 플랜 (API 호출 대신)
-        recommended_plan = {
-            "1주차": {
-                "월요일": [
-                    {
-                        "동작": "롤링 업 (Rolling Up)",
-                        "설명": "복부 근육 강화와 척추 유연성 향상에 도움되는 기본 운동",
-                        "난이도": "초급",
-                        "소요시간": "10분",
-                        "주의사항": "허리 통증이 있다면 조심스럽게 진행하세요"
-                    },
-                    {
-                        "동작": "100s (Hundreds)",
-                        "설명": "코어 근육 강화를 위한 클래식한 필라테스 동작",
-                        "난이도": "중급",
-                        "소요시간": "15분",
-                        "주의사항": "호흡을 안정적으로 유지하세요"
-                    }
-                ],
-                "수요일": [
-                    {
-                        "동작": "테이블 탑 (Table Top)",
-                        "설명": "균형감과 코어 안정성을 향상시키는 운동",
-                        "난이도": "초급",
-                        "소요시간": "12분",
-                        "주의사항": "손목과 무릎에 무리가 가지 않도록 주의"
-                    },
-                    {
-                        "동작": "크로스 크런치 (Cross Crunch)",
-                        "설명": "복부 옆면 근육을 강화하는 동작",
-                        "난이도": "초급-중급",
-                        "소요시간": "10분",
-                        "주의사항": "목에 무리가 가지 않도록 주의"
-                    }
-                ],
-                "금요일": [
-                    {
-                        "동작": "레그 서클 (Leg Circles)",
-                        "설명": "하체 근육과 코어 안정성을 동시에 강화",
-                        "난이도": "중급",
-                        "소요시간": "15분",
-                        "주의사항": "허리를 평평하게 바닥에 밀착시키세요"
-                    },
-                    {
-                        "동작": "플랭크 변형",
-                        "설명": "전신 근력 강화와 코어 안정성 향상",
-                        "난이도": "중급-고급",
-                        "소요시간": "10분",
-                        "주의사항": "무릎이 흔들리지 않도록 주의"
-                    }
-                ]
-            }
-        }
-        return recommended_plan
-
-    def display_recommendation(recommendation):
-        """
-        추천 운동 계획을 드롭다운으로 시각적으로 표시
-        """
-        st.subheader("🌟 맞춤형 필라테스 주간 계획")
-        
-        # 추천 내용 드롭다운으로 출력
-        for week, days in recommendation.items():
-            st.markdown(f"### {week}")
-            for day, exercises in days.items():
-                with st.expander(f"**{day} 운동 계획**"):
-                    for exercise in exercises:
-                        st.markdown(f"#### {exercise.get('동작', '운동')}")
-                        st.markdown(f"**설명**: {exercise.get('설명', '없음')}")
-                        st.markdown(f"**난이도**: {exercise.get('난이도', '없음')}")
-                        st.markdown(f"**소요시간**: {exercise.get('소요시간', '없음')}")
-                        st.markdown(f"**주의사항**: {exercise.get('주의사항', '없음')}")
-                        st.divider()
-
-    def display_profile_insights(profile):
-        """사용자 프로필 인사이트 시각화"""
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.metric("BMI", calculate_bmi(profile['weight'], profile['height']))
-            st.metric("활동 수준", profile['activity_level'])
-        
-        with col2:
-            st.metric("목표", profile['purpose'])
-            st.metric("성별", profile['gender'])
-
-    def calculate_bmi(weight, height):
-        """BMI 계산"""
-        height_m = height / 100
-        bmi = weight / (height_m ** 2)
-        return f"{bmi:.1f}"
-    
     if st.button("완료", key="next_button", help="메인 페이지로 이동"):
         st.session_state.selected_page = "main"
 

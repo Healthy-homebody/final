@@ -8,7 +8,8 @@ import time
 
 from ultralytics import YOLO
 from dtaidistance import dtw
-from openai import OpenAI  # OpenAI 임포트
+from openai import OpenAI 
+from PIL import Image
 
 # .venv\Scripts\activate
 # streamlit run screen/main.py
@@ -40,32 +41,121 @@ if 'description_video_path' not in st.session_state:
 def load_yolo_model():
     return YOLO('yolov8m-pose.pt', verbose=False)
 
+# 이미지 경로 확인 함수 추가
+def check_image_paths(image_paths):
+    for action, path in image_paths.items():
+        if not os.path.exists(path):
+            print(f"Warning: Image path not found for {action}: {path}")
+
 # 메인 페이지
 def main_page():
+    image_paths = {
+        "로우 런지(Low Lunge)": os.path.join(os.path.dirname(__file__), '../src/images/01.jpg'),
+        "파르브리타 자누 시르사아사나(Revolved Head-to-Knee Pose)": os.path.join(os.path.dirname(__file__), '../src/images/02.jpg'),
+        "선 활 자세(Standing Split)": os.path.join(os.path.dirname(__file__), '../src/images/03.jpg'),
+        "런지 사이트 스트레칭(Lunging Side Stretch)": os.path.join(os.path.dirname(__file__), '../src/images/04.jpg'),
+        "안전한 허리 스트레칭": os.path.join(os.path.dirname(__file__), '../src/images/05.jpg'),
+        "코어 안정화 운동": os.path.join(os.path.dirname(__file__), '../src/images/06.jpg'),
+        "부드러운 척추 회전 동작": os.path.join(os.path.dirname(__file__), '../src/images/07.jpg'),
+        "천천히 하는 브릿지 자세": os.path.join(os.path.dirname(__file__), '../src/images/08.jpg'),
+        "골반저근 강화 운동": os.path.join(os.path.dirname(__file__), '../src/images/09.jpg'),
+        "호흡과 연계한 코어 운동": os.path.join(os.path.dirname(__file__), '../src/images/10.jpg'),
+        "부드러운 전신 스트레칭": os.path.join(os.path.dirname(__file__), '../src/images/11.jpg'),
+        "산후 체형 교정 동작": os.path.join(os.path.dirname(__file__), '../src/images/12.jpg'),
+    }
+    
+    # 이미지 경로 확인
+    check_image_paths(image_paths)
+
+    st.markdown('''
+        <style>
+            .category-title {
+                font-size: 24px;
+                font-weight: bold;
+                margin-top: 20px;
+            }
+            .sub-title-style {
+                font-size: 18px;
+                font-weight: 500;
+                margin-top: 10px;
+            }
+            .title-style {
+                font-size: 32px;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+            .section {
+                margin-bottom: 20px;
+            }
+            .action-button {
+                margin-top: 15px;
+            }
+            .category-column {
+                padding: 20px;
+            }
+            .intro-text {
+                font-size: 16px;
+                line-height: 1.6;
+                margin-top: 30px;
+            }
+            .image-container {
+                max-width: 350px;
+                margin-bottom: 20px;
+            }
+        </style>
+    ''', unsafe_allow_html=True)
+    
     st.markdown('<div class="title-style">Healthy Homebody</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title-style section">필라테스 동작을 선택하세요</div>', unsafe_allow_html=True)
 
-    actions = [
-        "로우 런지(Low Lunge)",
-        "파르브리타 자누 시르사아사나(Revolved Head-to-Knee Pose)",
-        "선 활 자세(Standing Split)",
-        "런지 사이트 스트레칭(Lunging Side Stretch)"
-    ]
+    # 건강 상태별 필라테스 카테고리 추가
+    categories = {
+        "일반 필라테스": [
+            "로우 런지(Low Lunge)",
+            "파르브리타 자누 시르사아사나(Revolved Head-to-Knee Pose)",
+            "선 활 자세(Standing Split)",
+            "런지 사이트 스트레칭(Lunging Side Stretch)"
+        ],
+        "디스크 환자를 위한 필라테스": [
+            "안전한 허리 스트레칭",
+            "코어 안정화 운동",
+            "부드러운 척추 회전 동작",
+            "천천히 하는 브릿지 자세"
+        ],
+        "출산 후 회복 필라테스": [
+            "골반저근 강화 운동",
+            "호흡과 연계한 코어 운동",
+            "부드러운 전신 스트레칭",
+            "산후 체형 교정 동작"
+        ]
+    }
 
-    col1, col2 = st.columns(2)
+    for category, actions in categories.items():
+        st.markdown(f'<div class="category-title">{category}</div>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
 
-    with col1:
-        for action in actions[:2]:
-            if st.button(action):
-                st.session_state.selected_page = "page1"
-                st.session_state.selected_action = action
+        with col1:
+            for action in actions[:2]:
+                image = Image.open(image_paths[action]) if action in image_paths else None
+                if image:
+                    st.image(image, use_column_width=True)
+                
+                if st.button(action, key=f"{category}_{action}"):
+                    st.session_state.selected_page = "page1"
+                    st.session_state.selected_action = action
 
-    with col2:
-        for action in actions[2:]:
-            if st.button(action):
-                st.session_state.selected_page = "page1"
-                st.session_state.selected_action = action
-
+        with col2:
+            for action in actions[2:]:
+                image = Image.open(image_paths[action]) if action in image_paths else None
+                if image:
+                    st.image(image, use_column_width=True)
+                
+                if st.button(action, key=f"{category}_{action}"):
+                    st.session_state.selected_page = "page1"
+                    st.session_state.selected_action = action
+        
     st.markdown(
         """
         <div class="description-style section">
@@ -210,7 +300,61 @@ def page1():
                 ])
             ],
             "video_path": os.path.join(os.path.dirname(__file__), '../src/mp4/video4.mp4')
-        }
+        },
+                "안전한 허리 스트레칭": {
+            "title": "안전한 허리 스트레칭",
+            "description": [
+                ("자세 설명", [
+                    "디스크 환자를 위한 부드럽고 안전한 스트레칭 동작입니다.",
+                    "천천히, 몸에 무리가 가지 않도록 주의하며 진행하세요.",
+                    "통증이 느껴지면 즉시 중단하고 전문가와 상담하세요."
+                ]),
+                ("효과", [
+                    "허리 근육의 유연성 향상",
+                    "디스크 주변 근육 이완",
+                    "만성 허리 통증 완화에 도움"
+                ]),
+                ("주의사항", [
+                    "의사나 물리치료사와 사전 상담 필수",
+                    "갑작스러운 움직임 금지",
+                    "개인의 통증 역치를 존중하며 진행"
+                ]),
+                ("실행 방법", [
+                    "1. 편안한 바닥에 누워 준비해요.",
+                    "2. 무릎을 가슴 쪽으로 천천히 당겨요.",
+                    "3. 허리에 무리가 가지 않도록 주의해요.",
+                    "4. 호흡을 깊고 천천히 가져가요."
+                ])
+            ],
+            "video_path": os.path.join(os.path.dirname(__file__), '../src/mp4/video5.mp4')
+        },
+        "골반저근 강화 운동": {
+            "title": "골반저근 강화 운동",
+            "description": [
+                ("자세 설명", [
+                    "출산 후 회복에 필수적인 골반저근 강화 운동입니다.",
+                    "부드럽고 조심스럽게 진행해주세요.",
+                    "정확한 호흡과 연계하여 운동하는 것이 중요해요."
+                ]),
+                ("효과", [
+                    "골반저근 근력 회복",
+                    "요실금 예방",
+                    "산후 신체 회복 촉진"
+                ]),
+                ("주의사항", [
+                    "출산 후 의사와 상담 필수",
+                    "통증이나 불편함이 있으면 중단",
+                    "개인의 회복 상태에 맞게 조절"
+                ]),
+                ("실행 방법", [
+                    "1. 바닥에 편안히 누워요.",
+                    "2. 골반저근을 천천히 수축해요.",
+                    "3. 5-10초간 유지해요.",
+                    "4. 호흡과 함께 천천히 이완해요."
+                ])
+            ],
+            "video_path": os.path.join(os.path.dirname(__file__), '../src/mp4/video6.mp4')
+        },
     }
 
     selected_action = st.session_state.selected_action

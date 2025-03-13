@@ -107,7 +107,7 @@ def main_page():
             "선 활 자세(Standing Split)",
             "런지 사이트 스트레칭(Lunging Side Stretch)"
         ],
-        "디스크 환자를 위한 필라테스": [
+        "디스크 환자를 위한 재활 필라테스": [
             "안전한 허리 스트레칭",
             "코어 안정화 운동",
             "부드러운 척추 회전 동작",
@@ -118,6 +118,18 @@ def main_page():
             "호흡과 연계한 코어 운동",
             "부드러운 전신 스트레칭",
             "산후 체형 교정 동작"
+        ],
+        "척추 측만증 환자를 위한 재활 필라테스": [
+            "사이드 플랭크 (Side Plank)",
+            "캣 카우 스트레칭 (Cat-Cow Stretch)",
+            "스파인 스트레칭 포워드 (Spine Stretch Forward)",
+            "브릿지 (Bridge)"
+        ],
+        "교통사고 및 수술 후 회복 환자를 위한 재활 필라테스": [
+            "골반 기울이기 (Pelvic Tilt)",
+            "브릿지 (Bridge)",
+            "캣 카우 스트레칭 (Cat-Cow Stretch)",
+            "버드 독 (Bird Dog)"
         ]
     }
 
@@ -294,7 +306,7 @@ def page1():
             ],
             "video_path": os.path.join(os.path.dirname(__file__), '../src/mp4/video4.mp4')
         },
-                "안전한 허리 스트레칭": {
+        "안전한 허리 스트레칭": {
             "title": "안전한 허리 스트레칭",
             "description": [
                 ("자세 설명", [
